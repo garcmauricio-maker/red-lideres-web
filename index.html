@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f3d3e">
+  <title>Líderes · Registro</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Líderes">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<!-- ============ PANTALLA: INGRESO ============ -->
+<section id="v-login" class="vista login" hidden>
+  <div class="login-card">
+    <img src="icons/icon-192.png" alt="" class="login-logo">
+    <h1 id="org-nombre">Red de Líderes</h1>
+    <p class="muted">Ingresa con el código y PIN que te entregó el coordinador.</p>
+    <form id="f-login" autocomplete="off">
+      <label>Código de líder
+        <input id="l-codigo" required placeholder="Ej. L001" autocapitalize="characters">
+      </label>
+      <label>PIN
+        <input id="l-pin" required type="password" inputmode="numeric" maxlength="12" placeholder="••••••">
+      </label>
+      <button class="btn primario grande" type="submit">Ingresar</button>
+      <p id="l-error" class="error" role="alert"></p>
+    </form>
+  </div>
+</section>
+
+<!-- ============ PANTALLA: PRINCIPAL ============ -->
+<section id="v-app" class="vista" hidden>
+  <header class="top">
+    <div>
+      <div class="hola">Hola,</div>
+      <div id="u-nombre" class="u-nombre">—</div>
+    </div>
+    <button id="b-salir" class="btn fantasma peq" type="button">Salir</button>
+  </header>
+
+  <div id="estado-red" class="estado-red"></div>
+
+  <div class="stats">
+    <div class="stat"><b id="s-total">0</b><span>Total</span></div>
+    <div class="stat"><b id="s-hoy">0</b><span>Hoy</span></div>
+    <div class="stat pend"><b id="s-pend">0</b><span>Por subir</span></div>
+  </div>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab activa" data-tab="registrar" role="tab">Registrar</button>
+    <button class="tab" data-tab="lista" role="tab">Mis personas</button>
+  </nav>
+
+  <!-- Formulario -->
+  <main id="t-registrar" class="panel">
+    <form id="f-persona" novalidate>
+      <label>Nombre completo *
+        <input id="p-nombre" required autocomplete="off" placeholder="Nombres y apellidos">
+      </label>
+      <label>Cédula *
+        <input id="p-cedula" required inputmode="numeric" autocomplete="off" placeholder="Solo números">
+      </label>
+      <label>Dirección de residencia
+        <input id="p-direccion" autocomplete="off" placeholder="Ej. Calle 10 # 20-30, barrio">
+      </label>
+
+      <div class="campo">
+        <span class="etq">Ubicación de residencia (GPS)</span>
+        <div class="gps">
+          <button id="b-gps" class="btn secundario" type="button">📍 Capturar ubicación</button>
+          <div id="gps-info" class="gps-info muted">Sin ubicación. Funciona sin internet; activa el GPS del celular.</div>
+        </div>
+      </div>
+
+      <div class="campo">
+        <span class="etq">Respuesta *</span>
+        <div class="respuestas" role="radiogroup">
+          <label class="resp si"><input type="radio" name="respuesta" value="si"><span>Sí</span></label>
+          <label class="resp no"><input type="radio" name="respuesta" value="no"><span>No</span></label>
+          <label class="resp tv"><input type="radio" name="respuesta" value="tal_vez"><span>Tal vez</span></label>
+        </div>
+      </div>
+
+      <label class="check">
+        <input id="p-consent" type="checkbox">
+        <span id="txt-autorizacion">La persona autoriza el tratamiento de sus datos.</span>
+      </label>
+
+      <p id="p-error" class="error" role="alert"></p>
+      <button class="btn primario grande" type="submit">Guardar persona</button>
+    </form>
+  </main>
+
+  <!-- Lista -->
+  <main id="t-lista" class="panel" hidden>
+    <div class="lista-top">
+      <input id="buscar" type="search" placeholder="Buscar por nombre o cédula">
+      <button id="b-sync" class="btn secundario peq" type="button">↻ Subir / actualizar</button>
+    </div>
+    <ul id="lista" class="lista"></ul>
+  </main>
+</section>
+
+<div id="ios-tip" class="ios-tip" hidden>
+  <button type="button" class="ios-x" aria-label="Cerrar">✕</button>
+  <b>Instala la app en tu iPhone</b>
+  Toca <span class="ios-ic">⬆︎</span> <b>Compartir</b> abajo en Safari y luego <b>“Agregar a inicio”</b>.
+  Así funciona sin internet y no pierdes registros.
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
