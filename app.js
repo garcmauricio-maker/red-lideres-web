@@ -153,13 +153,53 @@
     } finally { btn.disabled = false; }
   });
 
+  // ---------- inscripción (primera vez) ----------
+  function verLogin(modo) {
+    $("f-inscripcion").hidden = modo !== "inscripcion";
+    $("f-login").hidden = modo !== "login";
+    $("b-bienvenida").hidden = modo !== "bienvenida";
+    $("i-error").textContent = ""; $("l-error").textContent = "";
+  }
+  document.querySelectorAll("[data-ir]").forEach(b => b.addEventListener("click", () => verLogin(b.dataset.ir)));
+
+  $("f-inscripcion").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const err = (m) => { $("i-error").textContent = m; };
+    const nombre = $("i-nombre").value.trim(), tel = soloDigitos($("i-tel").value);
+    const pin = $("i-pin").value.trim(), pin2 = $("i-pin2").value.trim(), grupo = $("i-grupo").value.trim();
+    if (nombre.length < 5) return err("Escribe tu nombre completo.");
+    if (tel.length < 7) return err("Escribe tu número de celular.");
+    if (!/^\d{4,6}$/.test(pin)) return err("El PIN debe tener de 4 a 6 números.");
+    if (pin !== pin2) return err("Los dos PIN no coinciden.");
+    if (!grupo) return err("Escribe la clave de grupo.");
+    if (leer(K.cola, []).length) return err("Este celular tiene registros sin subir de otro líder. Ese líder debe ingresar primero.");
+    const btn = e.submitter; btn.disabled = true; err("");
+    try {
+      const res = await rpc("inscribir_lider", { p_clave_grupo: grupo, p_nombre: nombre, p_telefono: tel, p_zona: $("i-zona").value.trim(), p_pin: pin });
+      if (!res.ok) {
+        if (res.ya_inscrito) { $("l-codigo").value = res.codigo; verLogin("login"); $("l-error").textContent = res.mensaje; $("l-pin").focus(); }
+        else err(res.mensaje);
+        return;
+      }
+      sesion = { codigo: res.codigo, pin, nombre: res.nombre };
+      guardar(K.sesion, sesion); guardar(K.sesion + "_ultimo", res.codigo);
+      guardar(K.stats, { total: 0, hoy: 0 }); guardar(K.lista, []);
+      $("bv-nombre").textContent = res.nombre.split(" ")[0];
+      $("bv-codigo").textContent = res.codigo;
+      verLogin("bienvenida");
+    } catch {
+      err("Sin conexión. Para inscribirte necesitas señal (solo esta vez).");
+    } finally { btn.disabled = false; }
+  });
+  $("b-empezar").addEventListener("click", () => { iniciarApp(); sincronizar(); });
+
   function cerrarSesion(forzado = false) {
     const pend = leer(K.cola, []).length;
     if (!forzado && pend && !confirm(`Tienes ${pend} registro(s) sin subir. Se conservarán en este celular, pero no se subirán hasta que vuelvas a ingresar. ¿Salir?`)) return;
     if (!forzado && !pend && !confirm("¿Cerrar sesión?")) return;
     sesion = null; localStorage.removeItem(K.sesion);
     if (!pend) { localStorage.removeItem(K.lista); localStorage.removeItem(K.stats); localStorage.removeItem(K.rech); }
-    $("l-pin").value = ""; mostrar("login");
+    $("l-pin").value = ""; verLogin("login"); mostrar("login");
   }
   $("b-salir").addEventListener("click", () => cerrarSesion());
 
@@ -255,7 +295,8 @@
   $("org-nombre").textContent = CFG.NOMBRE_ORGANIZACION;
   document.title = CFG.NOMBRE_ORGANIZACION + " · Registro";
   $("txt-autorizacion").textContent = CFG.TEXTO_AUTORIZACION;
-  if (sesion) { iniciarApp(); sincronizar(); } else mostrar("login");
+  if (sesion) { iniciarApp(); sincronizar(); }
+  else { verLogin(leer(K.sesion + "_ultimo", "") ? "login" : "inscripcion"); mostrar("login"); }
 
   // En el APK los archivos ya están dentro de la app; el service worker solo se usa en la versión web
   if (!window.Capacitor && "serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});

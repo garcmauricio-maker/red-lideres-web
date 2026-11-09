@@ -1,6 +1,6 @@
 // Permite abrir la app sin internet (guarda los archivos de la app en el celular).
 // Cambia la versión cada vez que publiques cambios para que los celulares se actualicen.
-const VERSION = "lideres-v1";
+const VERSION = "lideres-v2";
 const ARCHIVOS = ["./", "index.html", "app.css", "app.js", "config.js", "manifest.webmanifest",
                   "icons/icon-192.png", "icons/icon-512.png"];
 

@@ -97,3 +97,11 @@ input:focus{outline:none;border-color:var(--verde-2);box-shadow:0 0 0 3px rgba(2
 .ios-tip b:first-of-type{display:block;margin-bottom:4px;color:var(--verde)}
 .ios-ic{display:inline-block;border:1.5px solid var(--verde);border-radius:5px;padding:0 5px;color:var(--verde);font-weight:800}
 .ios-x{position:absolute;top:8px;right:8px;border:0;background:#eee;border-radius:50%;width:28px;height:28px;cursor:pointer}
+
+/* Inscripción */
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dos label{margin:.85rem 0 0}
+.opc{font-weight:400;color:var(--muted)}
+.enlace{display:block;width:100%;margin-top:.4rem;border:0;background:none;color:var(--verde-2);font:inherit;font-weight:700;padding:.7rem;cursor:pointer;text-decoration:underline}
+.codigo-grande{font-size:3rem;font-weight:900;letter-spacing:.08em;color:var(--verde);background:#e4efe9;border-radius:16px;padding:.6rem;margin:.6rem 0}
+#b-bienvenida{text-align:center;margin-top:1rem}

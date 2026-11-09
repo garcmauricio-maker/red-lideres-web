@@ -21,8 +21,38 @@
   <div class="login-card">
     <img src="icons/icon-192.png" alt="" class="login-logo">
     <h1 id="org-nombre">Red de Líderes</h1>
-    <p class="muted">Ingresa con el código y PIN que te entregó el coordinador.</p>
-    <form id="f-login" autocomplete="off">
+
+    <!-- Inscripción (primera vez) -->
+    <form id="f-inscripcion" autocomplete="off">
+      <p class="muted">Primera vez: inscríbete y recibirás tu código de líder.</p>
+      <label>Nombre completo
+        <input id="i-nombre" required placeholder="Nombres y apellidos" autocomplete="name">
+      </label>
+      <label>Celular
+        <input id="i-tel" required inputmode="tel" placeholder="Ej. 300 123 4567" autocomplete="tel">
+      </label>
+      <label>Zona, barrio o municipio <span class="opc">(opcional)</span>
+        <input id="i-zona" placeholder="Ej. Suba">
+      </label>
+      <div class="dos">
+        <label>Crea un PIN
+          <input id="i-pin" required type="password" inputmode="numeric" maxlength="6" placeholder="4 a 6 números">
+        </label>
+        <label>Repite el PIN
+          <input id="i-pin2" required type="password" inputmode="numeric" maxlength="6" placeholder="••••">
+        </label>
+      </div>
+      <label>Clave de grupo
+        <input id="i-grupo" required placeholder="La que te dio el coordinador" autocapitalize="characters">
+      </label>
+      <button class="btn primario grande" type="submit">Inscribirme</button>
+      <p id="i-error" class="error" role="alert"></p>
+      <button type="button" class="enlace" data-ir="login">Ya tengo código · Ingresar</button>
+    </form>
+
+    <!-- Ingreso (ya inscrito / cambio de celular) -->
+    <form id="f-login" autocomplete="off" hidden>
+      <p class="muted">Ingresa con tu código de líder y tu PIN.</p>
       <label>Código de líder
         <input id="l-codigo" required placeholder="Ej. L001" autocapitalize="characters">
       </label>
@@ -31,7 +61,16 @@
       </label>
       <button class="btn primario grande" type="submit">Ingresar</button>
       <p id="l-error" class="error" role="alert"></p>
+      <button type="button" class="enlace" data-ir="inscripcion">Primera vez · Inscribirme</button>
     </form>
+
+    <!-- Código asignado -->
+    <div id="b-bienvenida" hidden>
+      <p class="muted">¡Listo, <b id="bv-nombre"></b>! Tu código de líder es:</p>
+      <div id="bv-codigo" class="codigo-grande">L000</div>
+      <p class="muted">Anótalo junto con tu PIN. La app te mantendrá conectado; solo los necesitarás si cambias de celular.</p>
+      <button id="b-empezar" class="btn primario grande" type="button">Empezar a registrar</button>
+    </div>
   </div>
 </section>
 
