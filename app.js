@@ -82,10 +82,10 @@
         <div class="err-msg">${esc(p.mensaje)}</div></div>
         <div><span class="chip err">No subido</span><br><button class="btn-x" data-quitar="${esc(p.client_uuid)}">Quitar</button></div></li>`);
     cola.forEach(p => html += `
-      <li><div><div class="n">${esc(p.nombre)}</div><div class="d">CC ${esc(p.cedula)} · ${RESP[p.respuesta]}</div></div>
+      <li><div><div class="n">${esc(p.nombre)}</div><div class="d">CC ${esc(p.cedula)}${p.telefono ? " · ☎ " + esc(p.telefono) : ""} · ${RESP[p.respuesta]}</div></div>
         <span class="chip pend">Por subir</span></li>`);
     lista.forEach(p => html += `
-      <li><div><div class="n">${esc(p.nombre)}</div><div class="d">CC ${esc(p.cedula)}${p.con_gps ? " · 📍" : ""}${p.direccion ? " · " + esc(p.direccion) : ""}</div></div>
+      <li><div><div class="n">${esc(p.nombre)}</div><div class="d">CC ${esc(p.cedula)}${p.telefono ? " · ☎ " + esc(p.telefono) : ""}${p.con_gps ? " · 📍" : ""}${p.direccion ? " · " + esc(p.direccion) : ""}</div></div>
         <span class="chip ${esc(p.respuesta)}">${RESP[p.respuesta] || ""}</span></li>`);
     $("lista").innerHTML = html || `<li class="vacio">${filtro ? "Sin resultados" : "Aún no hay personas registradas"}</li>`;
   }
@@ -232,9 +232,11 @@
     $("p-error").textContent = "";
     const nombre = $("p-nombre").value.trim().replace(/\s+/g, " ");
     const cedula = soloDigitos($("p-cedula").value);
+    const telefono = soloDigitos($("p-telefono").value);
     const respuesta = (document.querySelector("input[name=respuesta]:checked") || {}).value;
     if (nombre.length < 3) return err("Escribe el nombre completo.");
     if (cedula.length < 5 || cedula.length > 12) return err("La cédula debe tener entre 5 y 12 dígitos.");
+    if (telefono && (telefono.length < 7 || telefono.length > 12)) return err("El teléfono debe tener entre 7 y 12 dígitos.");
     if (!respuesta) return err("Selecciona la respuesta: Sí, No o Tal vez.");
     if (!$("p-consent").checked) return err("Falta marcar la autorización de datos.");
 
@@ -242,7 +244,7 @@
     if (yaEsta) return err("Esta cédula ya está en tu lista.");
 
     const item = {
-      client_uuid: uuid(), nombre, cedula,
+      client_uuid: uuid(), nombre, cedula, telefono,
       direccion: $("p-direccion").value.trim(),
       latitud: gps ? gps.latitud : "", longitud: gps ? gps.longitud : "", precision_m: gps ? gps.precision_m : "",
       respuesta, consentimiento: true, creado: new Date().toISOString()
